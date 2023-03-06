@@ -5,6 +5,7 @@ export interface PaginatedDto {
   numberOfPages: number;
   pageSize: number;
   totalNumberOfItems: number;
+  status: number;
 }
 
 interface PaymentTransactionDto {
@@ -13,7 +14,7 @@ interface PaymentTransactionDto {
   currency: string;
   description: string;
   id: string;
-  status: "CAPTURED" | "COMPLETED" | "CREATED" | "FAILED" | "SETTLED";
+  status: string;
 }
 
 export interface ErrnoException extends Error {

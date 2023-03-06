@@ -2,6 +2,7 @@
   "name": "vyne",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "proxy": "http://localhost:8080",
   "dependencies": {
     "@emotion/react": "^11.10.6",
@@ -10,7 +11,6 @@
     "@mui/x-data-grid": "^6.0.0",
     "@mui/x-date-pickers": "^6.0.0",
     "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.14",
@@ -29,7 +29,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "react-scripts test --transformIgnorePatterns",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -49,5 +49,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@testing-library/react": "^14.0.0"
   }
 }

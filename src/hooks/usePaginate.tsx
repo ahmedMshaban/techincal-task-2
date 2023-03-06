@@ -4,11 +4,13 @@ import { PaginatedDto } from "../types/index";
 
 interface usePaginateProps {
   pageIndex: number;
+  pageSize: number;
+  status: string;
 }
 
-const usePaginate = ({ pageIndex }: usePaginateProps) => {
+const usePaginate = ({ pageIndex, pageSize, status }: usePaginateProps) => {
   const { data, error, isLoading } = useSWR<PaginatedDto>(
-    `/api/v1/payments/?page=${pageIndex}`,
+    `http://localhost:8080/api/v1/payments/?page=${pageIndex}&size=${pageSize}&status=${status}`,
     fetcher
   );
 

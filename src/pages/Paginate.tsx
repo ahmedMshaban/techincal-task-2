@@ -1,56 +1,53 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import Box from "@mui/material/Box";
-import dayjs from "dayjs";
+import Grid from "@mui/material/Grid";
 
 import usePaginate from "../hooks/usePaginate";
 import useRows from "../hooks/useRows";
+import useDate from "../hooks/useDate";
+import useStatus from "../hooks/useStatus";
+
 import { columns } from "../data/columns";
 import DateFilter from "../components/filters/DateFilter";
-import useDate from "../hooks/useDate";
+import StatusFilter from "../components/filters/StatusFilter";
+import { Container } from "@mui/system";
 
 const Paginate: React.FC = () => {
   const [paginationModel, setPaginationModel] = useState({
     pageSize: 5,
     page: 0,
   });
+
+  const { transactionDate, handleTransactionDateChange } = useDate();
+  const { status, handleStatusChange } = useStatus();
+
   const { paginate, isError, isLoading } = usePaginate({
     pageIndex: paginationModel.page,
+    pageSize: paginationModel.pageSize,
+    status: status,
   });
-  const { rows, filteredRows, rowCountState, setFilteredRows } = useRows({
+
+  const { rows, rowCountState } = useRows({
     paginate,
+    transactionDate,
   });
-  const { transactionDate, handleTransactionDateChange } = useDate();
-
-  useEffect(() => {
-    if (transactionDate !== null) {
-      console.log('whaat aabout here any loop?');
-
-      setFilteredRows(
-        rows.filter((row) => {
-          const createdAt = dayjs(row?.createdAt);
-          const createdAtWithoutTime = createdAt.startOf("day");
-          const transactionDateWithoutTime = transactionDate?.startOf("day");
-          return createdAtWithoutTime.isSame(transactionDateWithoutTime);
-        })
-      );
-    }
-  }, [rows, setFilteredRows, transactionDate]);
-
-  useEffect(()=>{
-    console.log('any loop?');
-    console.log(filteredRows);
-  }, [filteredRows])
 
   if (isError) return <div>failed to load</div>;
 
-  // render data
   return (
-    <Box sx={{ width: "100%", marginTop: "50px" }}>
-      <DateFilter
-        onTransactionDateChange={handleTransactionDateChange}
-        transactionDate={transactionDate}
-      />
+    <Container className="page-container">
+      <Grid container spacing={2} className="filters-container">
+        <Grid item xs={12} md={8}>
+          <StatusFilter status={status} onStatusChange={handleStatusChange} />
+        </Grid>
+        <Grid item xs={12} md={4}>
+          <DateFilter
+            onTransactionDateChange={handleTransactionDateChange} //
+            transactionDate={transactionDate}
+          />
+        </Grid>
+      </Grid>
+
       <DataGrid
         disableColumnFilter
         disableColumnSelector
@@ -60,13 +57,13 @@ const Paginate: React.FC = () => {
         autoHeight
         paginationModel={paginationModel}
         onPaginationModelChange={setPaginationModel}
+        pageSizeOptions={[paginationModel.pageSize]}
         columns={columns}
-        rows={transactionDate !== null ? filteredRows: rows}
-        pageSizeOptions={[5]}
+        rows={rows}
         loading={isLoading}
         rowCount={rowCountState}
       ></DataGrid>
-    </Box>
+    </Container>
   );
 };
 
